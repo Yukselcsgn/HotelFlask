@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}FAQ Yönetimi | Admin Panel{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <div class="admin-header">
+        <h2>❓ FAQ Yönetimi</h2>
+        <div class="admin-actions">
+            <a href="{{ url_for('admin.dashboard') }}" class="back-btn">← Geri Dön</a>
+        </div>
+    </div>
+    
+    <!-- Yeni FAQ Ekleme Formu -->
+    <div class="form-section">
+        <h3>Yeni FAQ Ekle</h3>
+        <form method="POST" action="{{ url_for('admin.add_faq') }}" class="faq-form">
+            <div class="form-group">
+                <label for="question">Soru:</label>
+                <input type="text" id="question" name="question" placeholder="Soru metnini giriniz" required>
+            </div>
+            <div class="form-group">
+                <label for="answer">Cevap:</label>
+                <textarea id="answer" name="answer" placeholder="Cevap metnini giriniz" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="display_order">Görüntüleme Sırası:</label>
+                <input type="number" id="display_order" name="display_order" value="0" min="0">
+            </div>
+            <button type="submit" class="save-btn">FAQ Ekle</button>
+        </form>
+    </div>
+    
+    <!-- Mevcut FAQ'lar -->
+    <div class="faq-list-section">
+        <h3>Mevcut FAQ'lar</h3>
+        
+        {% if faqs %}
+        <div class="faq-list">
+            {% for faq in faqs %}
+            <div class="faq-item-admin">
+                <form method="POST" action="{{ url_for('admin.edit_faq', faq_id=faq.id) }}" class="faq-edit-form">
+                    <div class="faq-header">
+                        <h4>FAQ #{{ faq.id }}</h4>
+                        <div class="faq-actions">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="is_active" {% if faq.is_active %}checked{% endif %}>
+                                Aktif
+                            </label>
+                            <button type="submit" class="edit-btn">Güncelle</button>
+                            <button type="button" class="delete-btn" onclick="deleteFAQ({{ faq.id }})">Sil</button>
+                        </div>
+                    </div>
+                    <div class="faq-content">
+                        <div class="form-group">
+                            <label>Soru:</label>
+                            <input type="text" name="question" value="{{ faq.question }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Cevap:</label>
+                            <textarea name="answer" rows="3" required>{{ faq.answer }}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Görüntüleme Sırası:</label>
+                            <input type="number" name="display_order" value="{{ faq.display_order }}" min="0">
+                        </div>
+                    </div>
+                    <div class="faq-meta">
+                        <small>Oluşturulma: {{ faq.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                        {% if faq.updated_at != faq.created_at %}
+                        <small>Güncellenme: {{ faq.updated_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-faqs">
+            <p>Henüz FAQ bulunmuyor. Yukarıdaki formu kullanarak ilk FAQ'nizi ekleyin.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Silme Onay Modal -->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <h3>FAQ Silme Onayı</h3>
+        <p>Bu FAQ'yu silmek istediğinizden emin misiniz?</p>
+        <div class="modal-actions">
+            <button onclick="confirmDelete()" class="delete-btn">Evet, Sil</button>
+            <button onclick="closeDeleteModal()" class="cancel-btn">İptal</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let faqToDelete = null;
+
+function deleteFAQ(faqId) {
+    faqToDelete = faqId;
+    document.getElementById('deleteModal').style.display = 'block';
+}
+
+function confirmDelete() {
+    if (faqToDelete) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/admin/faq/delete/${faqToDelete}`;
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+    faqToDelete = null;
+}
+
+// Modal dışına tıklandığında kapatma
+window.onclick = function(event) {
+    const modal = document.getElementById('deleteModal');
+    if (event.target == modal) {
+        closeDeleteModal();
+    }
+}
+</script>
+{% endblock %} 

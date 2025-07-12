@@ -7,6 +7,7 @@ class Reservation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)  # Telefon numarası eklendi
     room_type = db.Column(db.String(80), nullable=False)
     check_in = db.Column(db.Date, nullable=False)
     check_out = db.Column(db.Date, nullable=False)
@@ -49,3 +50,17 @@ class Image(db.Model):
 
     def __repr__(self):
         return f"<Image {self.filename} - {self.category}>"
+
+class FAQ(db.Model):
+    __tablename__ = 'faqs'
+
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.String(500), nullable=False)
+    answer = db.Column(db.Text, nullable=False)
+    display_order = db.Column(db.Integer, default=0)
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<FAQ {self.question[:50]}...>"

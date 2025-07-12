@@ -2,37 +2,110 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Otelimiz{% endblock %}</title>
+    <title>{% block title %}Altun Pansiyon - Konforlu Konaklama Deneyimi{% endblock %}</title>
+    
+    <!-- SEO Meta Etiketleri -->
+    <meta name="description" content="{% block description %}Altun Pansiyon, şehir merkezinde konforlu odalar, temiz ortam ve güler yüzlü hizmet ile unutulmaz konaklama deneyimi sunar. Online rezervasyon yapın!{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}otel, pansiyon, konaklama, rezervasyon, şehir merkezi, temiz oda, konforlu{% endblock %}">
+    <meta name="author" content="Altun Pansiyon">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Turkish">
+    
+    <!-- Open Graph Meta Etiketleri (Facebook, LinkedIn) -->
+    <meta property="og:title" content="{% block og_title %}Altun Pansiyon - Konforlu Konaklama{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Şehir merkezinde konforlu odalar ve temiz ortam ile unutulmaz konaklama deneyimi.{% endblock %}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:image" content="{{ url_for('static', filename='images/WhatsApp Image 2025-07-01 at 23.10.28.jpeg', _external=True) }}">
+    <meta property="og:site_name" content="Altun Pansiyon">
+    <meta property="og:locale" content="tr_TR">
+    
+    <!-- Twitter Card Meta Etiketleri -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}Altun Pansiyon - Konforlu Konaklama{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Şehir merkezinde konforlu odalar ve temiz ortam ile unutulmaz konaklama deneyimi.{% endblock %}">
+    <meta name="twitter:image" content="{{ url_for('static', filename='images/WhatsApp Image 2025-07-01 at 23.10.28.jpeg', _external=True) }}">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{{ request.url }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    
+    <!-- CSS ve Fontlar -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Schema.org Yapılandırılmış Veri -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Hotel",
+        "name": "Altun Pansiyon",
+        "description": "Şehir merkezinde konforlu odalar ve temiz ortam ile unutulmaz konaklama deneyimi",
+        "url": "{{ request.url_root }}",
+        "telephone": "+90 555 555 55 55",
+        "email": "info@altunpansiyon.com",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Şehir Merkezi",
+            "addressLocality": "Türkiye",
+            "addressCountry": "TR"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "40.9862",
+            "longitude": "29.1243"
+        },
+        "priceRange": "₺₺",
+        "amenityFeature": [
+            {
+                "@type": "LocationFeatureSpecification",
+                "name": "Wi-Fi",
+                "value": true
+            },
+            {
+                "@type": "LocationFeatureSpecification", 
+                "name": "Klima",
+                "value": true
+            },
+            {
+                "@type": "LocationFeatureSpecification",
+                "name": "Kahvaltı",
+                "value": true
+            }
+        ],
+        "image": "{{ url_for('static', filename='images/WhatsApp Image 2025-07-01 at 23.10.28.jpeg', _external=True) }}"
+    }
+    </script>
 </head>
 <body>
-    <header>
+    <header role="banner">
         <div class="header-container">
-            <a href="/" class="logo-link">
-                <img src="{{ url_for('static', filename='images/WhatsApp Image 2025-07-01 at 23.10.28.jpeg') }}" alt="Otel Logo" class="logo-img">
+            <a href="/" class="logo-link" aria-label="Altun Pansiyon Anasayfa">
+                <img src="{{ url_for('static', filename='images/WhatsApp Image 2025-07-01 at 23.10.28.jpeg') }}" alt="Altun Pansiyon Logo" class="logo-img">
                 <span class="logo-title">Altun Pansiyon</span>
             </a>
-            <button class="menu-toggle" aria-label="Menüyü Aç/Kapat">
+            <button class="menu-toggle" aria-label="Menüyü Aç/Kapat" aria-expanded="false">
                 <span class="bar"></span>
                 <span class="bar"></span>
                 <span class="bar"></span>
             </button>
-            <nav>
+            <nav role="navigation" aria-label="Ana navigasyon">
                 <ul>
-                    <li><a href="/">Anasayfa</a></li>
-                    <li><a href="/rooms">Odalar</a></li>
-                    <li><a href="/reserve">Rezervasyon</a></li>
+                    <li><a href="/" aria-current="{% if request.endpoint == 'main.index' %}page{% endif %}">Anasayfa</a></li>
+                    <li><a href="/rooms" aria-current="{% if request.endpoint == 'main.rooms' %}page{% endif %}">Odalar</a></li>
+                    <li><a href="/reserve" aria-current="{% if request.endpoint == 'reservation.reserve' %}page{% endif %}">Rezervasyon</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <main>
+    <main role="main">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                <div class="flashes">
+                <div class="flashes" role="alert" aria-live="polite">
                     {% for category, message in messages %}
                         <div class="flash {{ category }}">{{ message }}</div>
                     {% endfor %}
@@ -43,8 +116,9 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- BURAYA EKLE -->
-    {% include "includes/footer.html" %}
+    <footer role="contentinfo">
+        {% include "includes/footer.html" %}
+    </footer>
 </body>
 </html>
 

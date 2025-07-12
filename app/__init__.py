@@ -20,10 +20,14 @@ def create_app(config_class=DevelopmentConfig):
     from app.routes.main import main_bp
     from app.routes.reservation import reservation_bp
     from app.routes.admin import admin_bp
+    from app.routes.sitemap import sitemap_bp
+    from app.routes.robots import robots_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(reservation_bp, url_prefix="/reserve")
     app.register_blueprint(admin_bp, url_prefix="/admin")
+    app.register_blueprint(sitemap_bp)
+    app.register_blueprint(robots_bp)
 
     # Modelleri import et
     from app.models.reservation import Reservation, RoomPrice, Image

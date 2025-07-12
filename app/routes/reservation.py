@@ -12,6 +12,7 @@ def reserve():
         try:
             name = request.form.get("name")
             email = request.form.get("email")
+            phone = request.form.get("phone")  # Telefon numarası eklendi
             room_type = request.form.get("room_type")
             check_in = datetime.strptime(request.form.get("check_in"), "%Y-%m-%d").date()
             check_out = datetime.strptime(request.form.get("check_out"), "%Y-%m-%d").date()
@@ -25,6 +26,7 @@ def reserve():
             reservation = Reservation(
                 name=name,
                 email=email,
+                phone=phone,  # Telefon numarası eklendi
                 room_type=room_type,
                 check_in=check_in,
                 check_out=check_out
@@ -36,6 +38,7 @@ def reserve():
                 to_email=email,
                 reservation_data={
                     "name": name,
+                    "phone": phone,  # Telefon numarası eklendi
                     "room_type": room_type,
                     "check_in": check_in.strftime("%d.%m.%Y"),
                     "check_out": check_out.strftime("%d.%m.%Y")
@@ -46,6 +49,7 @@ def reserve():
                 reservation_data={
                     "name": name,
                     "email": email,
+                    "phone": phone,  # Telefon numarası eklendi
                     "room_type": room_type,
                     "check_in": check_in.strftime("%d.%m.%Y"),
                     "check_out": check_out.strftime("%d.%m.%Y")

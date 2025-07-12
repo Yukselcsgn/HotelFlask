@@ -15,6 +15,8 @@
         <a href="#reservations" class="nav-tab active" onclick="showTab('reservations')">Rezervasyonlar</a>
         <a href="#prices" class="nav-tab" onclick="showTab('prices')">Fiyat Yönetimi</a>
         <a href="#images" class="nav-tab" onclick="showTab('images')">Fotoğraf Yönetimi</a>
+        <a href="#faq" class="nav-tab" onclick="showTab('faq')">FAQ Yönetimi</a>
+        <a href="#slider" class="nav-tab" onclick="showTab('slider')">Slider Yönetimi</a>
     </div>
     
     <div id="reservations" class="tab-content active">
@@ -39,6 +41,7 @@
                         <tr>
                             <th>Ad Soyad</th>
                             <th>E-posta</th>
+                            <th>Telefon</th>
                             <th>Oda Tipi</th>
                             <th>Giriş</th>
                             <th>Çıkış</th>
@@ -51,6 +54,7 @@
                         <tr>
                             <td>{{ r.name }}</td>
                             <td>{{ r.email }}</td>
+                            <td>{{ r.phone or 'Belirtilmemiş' }}</td>
                             <td><span class="room-type {{ r.room_type.lower() }}">{{ r.room_type }}</span></td>
                             <td>{{ r.check_in.strftime('%d.%m.%Y') }}</td>
                             <td>{{ r.check_out.strftime('%d.%m.%Y') }}</td>
@@ -109,6 +113,28 @@
                 <a href="{{ url_for('admin.manage_images') }}" class="manage-btn">📤 Fotoğrafları Yönet</a>
                 <p>Oda fotoğrafları ve anasayfa slayt fotoğraflarını buradan yönetebilirsiniz.<br>
                 Yeni fotoğraf yükleyebilir, mevcut fotoğrafları önizleyebilir ve silebilirsiniz.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="faq" class="tab-content">
+        <div class="faq-section">
+            <h3>❓ FAQ Yönetimi</h3>
+            <div class="faq-management">
+                <a href="{{ url_for('admin.manage_faq') }}" class="manage-btn">📝 FAQ'ları Yönet</a>
+                <p>Sık sorulan soruları buradan yönetebilirsiniz.<br>
+                Yeni soru-cevap ekleyebilir, mevcut olanları düzenleyebilir ve silebilirsiniz.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div id="slider" class="tab-content">
+        <div class="slider-section">
+            <h3>🖼️ Slider Yönetimi</h3>
+            <div class="slider-management">
+                <a href="{{ url_for('admin.manage_slider') }}" class="manage-btn">📤 Slider Fotoğraflarını Yönet</a>
+                <p>Anasayfa slider fotoğraflarını buradan yönetebilirsiniz.<br>
+                Yeni slider fotoğrafı ekleyebilir, mevcut fotoğrafları düzenleyebilir ve silebilirsiniz.</p>
             </div>
         </div>
     </div>

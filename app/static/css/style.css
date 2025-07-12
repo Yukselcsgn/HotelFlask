@@ -1482,14 +1482,27 @@ footer {
 }
 .room-type-badge {
     background: var(--main-gold);
-    color: var(--main-black);
-    padding: 4px 8px;
-    border-radius: 4px;
+    color: var(--main-white);
+    padding: 4px 12px;
+    border-radius: 15px;
     font-size: 0.8rem;
     font-weight: 600;
-    display: inline-block;
-    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
+
+.room-type-badge.standart {
+    background: #4CAF50;
+}
+
+.room-type-badge.deluxe {
+    background: #2196F3;
+}
+
+.room-type-badge.suit {
+    background: #9C27B0;
+}
+
 .filename {
     font-weight: 600;
     color: var(--main-black);
@@ -1910,5 +1923,668 @@ footer {
     
     .image-stats .stat-label {
         font-size: 0.8rem;
+    }
+}
+
+/* SEO Optimized Sections */
+.features-section {
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.features-section h2 {
+    text-align: center;
+    color: var(--main-black);
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    font-weight: 700;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.feature-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.feature-card h3 {
+    color: var(--main-black);
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.feature-card p {
+    color: #666;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.faq-section {
+    padding: 60px 20px;
+    background: white;
+}
+
+.faq-section h2 {
+    text-align: center;
+    color: var(--main-black);
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    font-weight: 700;
+}
+
+.faq-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.faq-item {
+    background: #f8f9fa;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    padding: 25px;
+    border-left: 4px solid var(--main-gold);
+    transition: transform 0.2s ease;
+}
+
+.faq-item:hover {
+    transform: translateX(5px);
+}
+
+.faq-item h3 {
+    color: var(--main-black);
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.faq-item p {
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.cta-section {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, var(--main-gold) 0%, #ffed4e 100%);
+}
+
+.cta-button {
+    display: inline-block;
+    background: var(--main-black);
+    color: white;
+    padding: 15px 30px;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.cta-button:hover {
+    background: #333;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    color: white;
+    text-decoration: none;
+}
+
+/* Responsive Design for SEO Sections */
+@media (max-width: 768px) {
+    .features-section {
+        padding: 40px 15px;
+    }
+    
+    .features-section h2 {
+        font-size: 2rem;
+        margin-bottom: 30px;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .feature-card {
+        padding: 25px;
+    }
+    
+    .feature-icon {
+        font-size: 2.5rem;
+    }
+    
+    .faq-section {
+        padding: 40px 15px;
+    }
+    
+    .faq-section h2 {
+        font-size: 2rem;
+        margin-bottom: 30px;
+    }
+    
+    .faq-item {
+        padding: 20px;
+    }
+    
+    .faq-item h3 {
+        font-size: 1.1rem;
+    }
+    
+    .cta-button {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .features-section h2,
+    .faq-section h2 {
+        font-size: 1.8rem;
+    }
+    
+    .feature-card {
+        padding: 20px;
+    }
+    
+    .faq-item {
+        padding: 15px;
+    }
+}
+
+/* Admin FAQ Management Styles */
+.faq-form {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.faq-item-admin {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.faq-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.faq-header h4 {
+    margin: 0;
+    color: var(--main-black);
+    font-size: 1.1rem;
+}
+
+.faq-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.faq-content {
+    margin-bottom: 15px;
+}
+
+.faq-content .form-group {
+    margin-bottom: 15px;
+}
+
+.faq-content input,
+.faq-content textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.faq-content textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.faq-meta {
+    display: flex;
+    gap: 20px;
+    font-size: 0.8rem;
+    color: #666;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 10px;
+}
+
+.no-faqs {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+/* Admin Slider Management Styles */
+.slider-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.slider-item {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.slider-preview {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
+
+.slider-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.slider-info {
+    padding: 15px;
+}
+
+.slider-info h4 {
+    margin: 0 0 10px 0;
+    font-size: 1rem;
+    color: var(--main-black);
+}
+
+.slider-info p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.slider-actions {
+    margin-top: 15px;
+    text-align: right;
+}
+
+.no-slider-images {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+/* Modal Actions */
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.cancel-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+.cancel-btn:hover {
+    background: #5a6268;
+}
+
+/* Responsive Design for Admin Pages */
+@media (max-width: 768px) {
+    .faq-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .faq-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .slider-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .slider-preview {
+        height: 150px;
+    }
+    
+    .faq-meta {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .faq-item-admin {
+        padding: 15px;
+    }
+    
+    .faq-content input,
+    .faq-content textarea {
+        font-size: 0.85rem;
+    }
+    
+    .slider-info {
+        padding: 10px;
+    }
+    
+    .slider-info h4 {
+        font-size: 0.9rem;
+    }
+    
+    .slider-info p {
+        font-size: 0.8rem;
+    }
+}
+
+/* Gelişmiş Fotoğraf Yönetimi Stilleri */
+.image-stats-section {
+    margin-bottom: 30px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.stats-grid .stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    border: 2px solid var(--main-gold);
+}
+
+.stats-grid .stat-card h4 {
+    margin: 0 0 10px 0;
+    color: var(--main-black);
+    font-size: 1rem;
+}
+
+.stats-grid .stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--main-gold);
+    margin: 0;
+}
+
+.quick-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    background: var(--main-gold);
+    color: var(--main-black);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.action-btn:hover {
+    background: #ffed4e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.image-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.status-badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.status-badge.active {
+    background: #28a745;
+    color: white;
+}
+
+.status-badge.inactive {
+    background: #dc3545;
+    color: white;
+}
+
+.category-badge {
+    background: var(--main-gold);
+    color: var(--main-black);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.image-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 0.8rem;
+    color: #666;
+    margin: 5px 0;
+}
+
+.toggle-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background-color 0.3s;
+}
+
+.toggle-btn.active {
+    background: #dc3545;
+}
+
+.toggle-btn.inactive {
+    background: #28a745;
+}
+
+.toggle-btn:hover {
+    opacity: 0.8;
+}
+
+/* Responsive Design for Enhanced Image Management */
+@media (max-width: 768px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .quick-actions {
+        flex-direction: column;
+    }
+    
+    .action-btn {
+        text-align: center;
+    }
+    
+    .image-meta {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .image-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid .stat-card {
+        padding: 15px;
+    }
+    
+    .stats-grid .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .action-btn {
+        padding: 10px 15px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Oda filtreleme butonları */
+.room-filter {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.filter-btn {
+    background: var(--main-white);
+    border: 2px solid var(--main-gold);
+    color: var(--main-gold);
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.filter-btn:hover {
+    background: var(--main-gold);
+    color: var(--main-white);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+.filter-btn.active {
+    background: var(--main-gold);
+    color: var(--main-white);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+/* Oda fotoğrafları bölümü */
+.room-images-section {
+    margin-bottom: 40px;
+}
+
+.room-images-section h3 {
+    color: var(--main-black);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 3px solid var(--main-gold);
+    padding-bottom: 10px;
+}
+
+/* Slider fotoğrafları bölümü */
+.slider-images-section {
+    margin-top: 40px;
+}
+
+.slider-images-section h3 {
+    color: var(--main-black);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 3px solid var(--main-gold);
+    padding-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+    .room-filter {
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .filter-btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+    
+    .room-images-section h3,
+    .slider-images-section h3 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .room-filter {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .filter-btn {
+        width: 100%;
+        max-width: 200px;
     }
 }

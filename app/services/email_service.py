@@ -46,6 +46,10 @@ def send_reservation_email(to_email, reservation_data):
                         <span class="value">{reservation_data['name']}</span>
                     </div>
                     <div class="detail-row">
+                        <span class="label">Telefon:</span>
+                        <span class="value">{reservation_data.get('phone', 'Belirtilmemiş')}</span>
+                    </div>
+                    <div class="detail-row">
                         <span class="label">Oda Tipi:</span>
                         <span class="value">{reservation_data['room_type']}</span>
                     </div>
@@ -131,6 +135,10 @@ def notify_owner_about_reservation(reservation_data, owner_email):
                     <div class="detail-row">
                         <span class="label">E-posta:</span>
                         <span class="value">{reservation_data['email']}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="label">Telefon:</span>
+                        <span class="value">{reservation_data.get('phone', 'Belirtilmemiş')}</span>
                     </div>
                     <div class="detail-row">
                         <span class="label">Oda Tipi:</span>

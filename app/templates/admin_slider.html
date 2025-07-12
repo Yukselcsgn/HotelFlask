@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+{% block title %}Slider Yönetimi - Admin{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <div class="admin-header">
+        <h2>🖼️ Slider Yönetimi</h2>
+        <div class="admin-actions">
+            <a href="{{ url_for('admin.dashboard') }}" class="back-btn">← Geri Dön</a>
+        </div>
+    </div>
+    
+    <div class="slider-management">
+        <!-- İstatistikler -->
+        <div class="image-stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>📊 Toplam Slider</h4>
+                    <p class="stat-number">{{ slider_images|length }}</p>
+                </div>
+                <div class="stat-card">
+                    <h4>🟢 Aktif Slider</h4>
+                    <p class="stat-number">{{ slider_images|selectattr('is_active', 'equalto', true)|list|length }}</p>
+                </div>
+                <div class="stat-card">
+                    <h4>🔴 Pasif Slider</h4>
+                    <p class="stat-number">{{ slider_images|selectattr('is_active', 'equalto', false)|list|length }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hızlı İşlemler -->
+        <div class="quick-actions">
+            <button onclick="showUploadForm()" class="action-btn">📤 Yeni Slider Ekle</button>
+            <button onclick="scanExistingImages()" class="action-btn">🔍 Mevcut Fotoğrafları Tara</button>
+            <button onclick="showBulkUpload()" class="action-btn">📦 Toplu Yükleme</button>
+        </div>
+
+        <div class="upload-section" id="uploadSection" style="display: none;">
+            <h3>📤 Yeni Slider Fotoğrafı Ekle</h3>
+            <form method="POST" action="{{ url_for('admin.upload_slider_image') }}" enctype="multipart/form-data" class="upload-form">
+                <div class="form-group">
+                    <label for="image">📁 Fotoğraf Seç:</label>
+                    <input type="file" name="image" accept="image/*" required>
+                    <small class="file-info">Desteklenen formatlar: JPG, PNG, GIF, WEBP (Max: 10MB)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="display_order">Görüntüleme Sırası:</label>
+                    <input type="number" name="display_order" value="0" min="0">
+                    <small>Düşük sayılar önce görüntülenir</small>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="upload-btn">📤 Slider Ekle</button>
+                    <button type="button" onclick="hideUploadForm()" class="cancel-btn">İptal</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Slider Fotoğrafları -->
+        <div class="slider-images-section">
+            <h3>🖼️ Anasayfa Slider Fotoğrafları</h3>
+            
+            <div class="image-grid">
+                {% for image in slider_images %}
+                <div class="image-card">
+                    <div class="image-preview">
+                        <img src="{{ url_for('static', filename='images/' + image.filename) }}" alt="{{ image.filename }}">
+                        <div class="image-overlay">
+                            <button class="preview-btn" onclick="previewImage('{{ url_for('static', filename='images/' + image.filename) }}')">👁️ Önizle</button>
+                            <button class="edit-btn" onclick="editImage({{ image.id }})">✏️ Düzenle</button>
+                        </div>
+                    </div>
+                    <div class="image-info">
+                        <div class="image-header">
+                            <span class="category-badge">Slider</span>
+                            <span class="status-badge {% if image.is_active %}active{% else %}inactive{% endif %}">
+                                {% if image.is_active %}Aktif{% else %}Pasif{% endif %}
+                            </span>
+                        </div>
+                        <p class="filename">{{ image.filename }}</p>
+                        <p class="image-meta">
+                            <span>Sıra: {{ image.display_order }}</span>
+                            <span>Yüklenme: {{ image.uploaded_at.strftime('%d.%m.%Y') if image.uploaded_at else 'Bilinmiyor' }}</span>
+                        </p>
+                    </div>
+                    <div class="image-actions">
+                        <button onclick="toggleImageStatus({{ image.id }})" class="toggle-btn {% if image.is_active %}active{% else %}inactive{% endif %}">
+                            {% if image.is_active %}🔴 Pasif Yap{% else %}🟢 Aktif Yap{% endif %}
+                        </button>
+                        <form method="POST" action="{{ url_for('admin.delete_slider_image', image_id=image.id) }}" style="display: inline;">
+                            <button type="submit" class="delete-btn" onclick="return confirmDelete('{{ image.filename }}', 'Slider')">
+                                🗑️ Sil
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% else %}
+                <div class="no-images">
+                    <p>📭 Henüz slider fotoğrafı yüklenmemiş.</p>
+                    <p>Yukarıdaki formu kullanarak ilk slider fotoğrafınızı yükleyin.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Image Preview Modal -->
+<div id="imagePreviewModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close" onclick="closePreviewModal()">&times;</span>
+        <img id="previewImage" src="" alt="Önizleme">
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Form göster/gizle fonksiyonları
+function showUploadForm() {
+    document.getElementById('uploadSection').style.display = 'block';
+}
+
+function hideUploadForm() {
+    document.getElementById('uploadSection').style.display = 'none';
+}
+
+// Mevcut fotoğrafları tarama
+function scanExistingImages() {
+    if (confirm('Mevcut fotoğrafları tarayıp veritabanına eklemek istediğinizden emin misiniz?')) {
+        fetch('/admin/scan-images', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(`✅ ${data.added} fotoğraf eklendi!\n⏭️ ${data.skipped} fotoğraf atlandı.`);
+                location.reload();
+            } else {
+                alert('❌ Hata: ' + data.error);
+            }
+        })
+        .catch(error => {
+            alert('❌ Hata oluştu: ' + error);
+        });
+    }
+}
+
+// Toplu yükleme
+function showBulkUpload() {
+    alert('Toplu yükleme özelliği yakında eklenecek!');
+}
+
+// Fotoğraf durumunu değiştir
+function toggleImageStatus(imageId) {
+    fetch(`/admin/images/toggle-status/${imageId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('❌ Hata: ' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('❌ Hata oluştu: ' + error);
+    });
+}
+
+// Fotoğraf düzenleme
+function editImage(imageId) {
+    // Düzenleme modalı açılabilir
+    alert('Fotoğraf düzenleme özelliği yakında eklenecek!');
+}
+
+// Fotoğraf önizleme fonksiyonu
+function previewImage(imageSrc) {
+    const modal = document.getElementById('imagePreviewModal');
+    const previewImg = document.getElementById('previewImage');
+    previewImg.src = imageSrc;
+    modal.style.display = 'block';
+}
+
+// Önizleme modalını kapat
+function closePreviewModal() {
+    document.getElementById('imagePreviewModal').style.display = 'none';
+}
+
+// Silme onayı
+function confirmDelete(filename, category) {
+    return confirm(`"${filename}" dosyasını ${category} kategorisinden silmek istediğinizden emin misiniz?\n\nBu işlem geri alınamaz!`);
+}
+
+// Modal dışına tıklandığında kapat
+window.onclick = function(event) {
+    const modal = document.getElementById('imagePreviewModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// ESC tuşu ile modal kapatma
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closePreviewModal();
+    }
+});
+</script>
+{% endblock %} 
+{% endblock %} 

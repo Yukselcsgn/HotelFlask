@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://altunpansiyon.com/sitemap.xml
+
+# Admin panelini engelle
+Disallow: /admin/
+
+# API endpoint'lerini engelle (gelecekte)
+Disallow: /api/
+
+# Crawl-delay
+Crawl-delay: 1 

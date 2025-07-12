@@ -1,14 +1,29 @@
 {% extends "base.html" %}
-{% block title %}Anasayfa{% endblock %}
+{% block title %}Altun Pansiyon - Şehir Merkezinde Konforlu Konaklama | Anasayfa{% endblock %}
+{% block description %}Altun Pansiyon'a hoş geldiniz! Şehir merkezine yakın konumu, konforlu odaları ve güler yüzlü hizmetiyle unutulmaz bir konaklama deneyimi sunar. Online rezervasyon yapın!{% endblock %}
+{% block keywords %}Altun Pansiyon, şehir merkezi pansiyon, konforlu konaklama, temiz oda, online rezervasyon, otel, pansiyon{% endblock %}
+{% block og_title %}Altun Pansiyon - Şehir Merkezinde Konforlu Konaklama{% endblock %}
+{% block og_description %}Şehir merkezine yakın konumu, konforlu odaları ve güler yüzlü hizmetiyle unutulmaz bir konaklama deneyimi.{% endblock %}
+{% block twitter_title %}Altun Pansiyon - Şehir Merkezinde Konforlu Konaklama{% endblock %}
+{% block twitter_description %}Şehir merkezine yakın konumu, konforlu odaları ve güler yüzlü hizmetiyle unutulmaz bir konaklama deneyimi.{% endblock %}
 
 {% block content %}
 
 <div class="carousel-container">
     <div class="carousel" id="homeCarousel">
-        <div class="carousel-slide active"><img src="{{ url_for('static', filename='images/WhatsApp Image 2025-07-01 at 23.10.28.jpeg') }}" alt="Altun Pansiyon"></div>
-        <div class="carousel-slide"><img src="{{ url_for('static', filename='images/594e9ecf-771c-46ba-a1e9-c3b0c4306d01.jpg') }}" alt="Otel Fotoğrafı"></div>
-        <div class="carousel-slide"><img src="{{ url_for('static', filename='images/2a01acd5-4c3a-4f3c-937e-28eea8587114.jpg') }}" alt="Otel Fotoğrafı"></div>
-        <div class="carousel-slide"><img src="{{ url_for('static', filename='images/ab0d7649-b2c0-457d-94df-f1ba32bc23aa.jpg') }}" alt="Otel Fotoğrafı"></div>
+        {% if slider_images %}
+            {% for image in slider_images %}
+            <div class="carousel-slide {% if loop.first %}active{% endif %}">
+                <img src="{{ url_for('static', filename='images/' + image.filename) }}" alt="Altun Pansiyon - {{ image.filename }}">
+            </div>
+            {% endfor %}
+        {% else %}
+            <!-- Varsayılan slider fotoğrafları (veritabanında fotoğraf yoksa) -->
+            <div class="carousel-slide active"><img src="{{ url_for('static', filename='images/WhatsApp Image 2025-07-01 at 23.10.28.jpeg') }}" alt="Altun Pansiyon"></div>
+            <div class="carousel-slide"><img src="{{ url_for('static', filename='images/594e9ecf-771c-46ba-a1e9-c3b0c4306d01.jpg') }}" alt="Otel Fotoğrafı"></div>
+            <div class="carousel-slide"><img src="{{ url_for('static', filename='images/2a01ac5-4c3a-4f3c-937e-28eea8587114.jpg') }}" alt="Otel Fotoğrafı"></div>
+            <div class="carousel-slide"><img src="{{ url_for('static', filename='images/ab0d7649-b2c0-457d-94df-f1ba32bc23aa.jpg') }}" alt="Otel Fotoğrafı"></div>
+        {% endif %}
     </div>
     <button class="carousel-btn prev" id="carouselPrev">&#10094;</button>
     <button class="carousel-btn next" id="carouselNext">&#10095;</button>
@@ -20,7 +35,63 @@
         Altun Pansiyon, şehir merkezine yakın konumu, konforlu odaları ve güler yüzlü hizmetiyle unutulmaz bir konaklama deneyimi sunar. Modern ve temiz odalarımız, zengin kahvaltımız ve huzurlu ortamımız ile kendinizi evinizde hissedeceksiniz. Hem iş hem tatil amaçlı konaklamalarınız için ideal bir tercih!
     </p>
 </div>
-<a href="/reserve">Şimdi Rezervasyon Yap</a>
+
+<section class="features-section">
+    <h2>Neden Altun Pansiyon?</h2>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">📍</div>
+            <h3>Merkezi Konum</h3>
+            <p>Şehir merkezine sadece 5 dakika yürüme mesafesinde, tüm turistik yerlere kolay erişim.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🛏️</div>
+            <h3>Konforlu Odalar</h3>
+            <p>Modern dekorasyon, temiz yataklar, klima ve ücretsiz Wi-Fi ile konforlu konaklama.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">💰</div>
+            <h3>Uygun Fiyat</h3>
+            <p>Kaliteli hizmet ve merkezi konum için en uygun fiyat garantisi.</p>
+        </div>
+    </div>
+</section>
+
+<section class="faq-section">
+    <h2>Sık Sorulan Sorular</h2>
+    <div class="faq-container">
+        {% if faqs %}
+            {% for faq in faqs %}
+            <div class="faq-item">
+                <h3>{{ faq.question }}</h3>
+                <p>{{ faq.answer }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <!-- Varsayılan FAQ'lar (veritabanında FAQ yoksa) -->
+            <div class="faq-item">
+                <h3>Check-in ve check-out saatleri nedir?</h3>
+                <p>Check-in saati 14:00, check-out saati 11:00'dır. Erken check-in veya geç check-out için önceden bilgi veriniz.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Rezervasyon iptali nasıl yapılır?</h3>
+                <p>Rezervasyon iptali için en az 24 saat önceden bilgi vermeniz gerekmektedir. İptal işlemi için bizimle iletişime geçiniz.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Wi-Fi hizmeti ücretsiz mi?</h3>
+                <p>Evet, tüm odalarımızda ücretsiz yüksek hızlı Wi-Fi hizmeti sunulmaktadır.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Evcil hayvan kabul ediyor musunuz?</h3>
+                <p>Maalesef evcil hayvan kabul etmiyoruz. Bu konuda anlayışınız için teşekkür ederiz.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<div class="cta-section">
+    <a href="/reserve" class="cta-button">Şimdi Rezervasyon Yap</a>
+</div>
 {% endblock %}
 
 {% block scripts %}
