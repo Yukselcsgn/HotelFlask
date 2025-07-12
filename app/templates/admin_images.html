@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% block title %}Fotoğraf Yönetimi - Admin{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <div class="admin-header">
+        <h2>📸 Fotoğraf Yönetimi</h2>
+        <div class="admin-actions">
+            <a href="{{ url_for('admin.dashboard') }}" class="back-btn">← Geri Dön</a>
+        </div>
+    </div>
+    
+    <div class="images-management">
+        <div class="upload-section">
+            <h3>📤 Yeni Fotoğraf Yükle</h3>
+            <form method="POST" action="{{ url_for('admin.upload_image') }}" enctype="multipart/form-data" class="upload-form">
+                <div class="form-group">
+                    <label for="category">Kategori:</label>
+                    <select name="category" required>
+                        <option value="room">🏠 Oda Fotoğrafı</option>
+                        <option value="slider">🖼️ Anasayfa Slayt</option>
+                    </select>
+                </div>
+                
+                <div class="form-group room-type-group" style="display: none;">
+                    <label for="room_type">Oda Tipi:</label>
+                    <select name="room_type">
+                        <option value="standart">Standart</option>
+                        <option value="deluxe">Standart Double</option>
+                        <option value="suit">Standart Triple</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="image">📁 Fotoğraf Seç:</label>
+                    <input type="file" name="image" accept="image/*" required>
+                    <small class="file-info">Desteklenen formatlar: JPG, PNG, GIF (Max: 5MB)</small>
+                </div>
+                
+                <button type="submit" class="upload-btn">📤 Fotoğraf Yükle</button>
+            </form>
+        </div>
+        
+        <div class="images-sections">
+            <div class="room-images">
+                <h3>🏠 Oda Fotoğrafları ({{ room_images|length }} adet)</h3>
+                <div class="image-grid">
+                    {% for image in room_images %}
+                    <div class="image-card">
+                        <div class="image-preview">
+                            <img src="{{ url_for('static', filename='images/' + image.room_type + '/' + image.filename) }}" alt="{{ image.filename }}">
+                            <div class="image-overlay">
+                                <button class="preview-btn" onclick="previewImage('{{ url_for('static', filename='images/' + image.room_type + '/' + image.filename) }}')">👁️ Önizle</button>
+                            </div>
+                        </div>
+                        <div class="image-info">
+                            <p class="room-type-badge">{{ image.room_type|title }}</p>
+                            <p class="filename">{{ image.filename }}</p>
+                            <p class="upload-date">Yüklenme: {{ image.uploaded_at.strftime('%d.%m.%Y') if image.uploaded_at else 'Bilinmiyor' }}</p>
+                        </div>
+                        <div class="image-actions">
+                            <form method="POST" action="{{ url_for('admin.delete_image', image_id=image.id) }}" style="display: inline;">
+                                <button type="submit" class="delete-btn" onclick="return confirmDelete('{{ image.filename }}')">
+                                    🗑️ Sil
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="no-images">
+                        <p>📭 Henüz oda fotoğrafı yüklenmemiş.</p>
+                        <p>Yukarıdaki formu kullanarak ilk fotoğrafınızı yükleyin.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="slider-images">
+                <h3>🖼️ Anasayfa Slayt Fotoğrafları ({{ slider_images|length }} adet)</h3>
+                <div class="image-grid">
+                    {% for image in slider_images %}
+                    <div class="image-card">
+                        <div class="image-preview">
+                            <img src="{{ url_for('static', filename='images/' + image.filename) }}" alt="{{ image.filename }}">
+                            <div class="image-overlay">
+                                <button class="preview-btn" onclick="previewImage('{{ url_for('static', filename='images/' + image.filename) }}')">👁️ Önizle</button>
+                            </div>
+                        </div>
+                        <div class="image-info">
+                            <p class="filename">{{ image.filename }}</p>
+                            <p class="upload-date">Yüklenme: {{ image.uploaded_at.strftime('%d.%m.%Y') if image.uploaded_at else 'Bilinmiyor' }}</p>
+                        </div>
+                        <div class="image-actions">
+                            <form method="POST" action="{{ url_for('admin.delete_image', image_id=image.id) }}" style="display: inline;">
+                                <button type="submit" class="delete-btn" onclick="return confirmDelete('{{ image.filename }}')">
+                                    🗑️ Sil
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="no-images">
+                        <p>📭 Henüz slayt fotoğrafı yüklenmemiş.</p>
+                        <p>Yukarıdaki formu kullanarak ilk slayt fotoğrafınızı yükleyin.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Image Preview Modal -->
+<div id="imagePreviewModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close" onclick="closePreviewModal()">&times;</span>
+        <img id="previewImage" src="" alt="Önizleme">
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Oda tipi seçimini göster/gizle
+document.querySelector('select[name="category"]').addEventListener('change', function() {
+    const roomTypeGroup = document.querySelector('.room-type-group');
+    if (this.value === 'room') {
+        roomTypeGroup.style.display = 'block';
+    } else {
+        roomTypeGroup.style.display = 'none';
+    }
+});
+
+// Fotoğraf önizleme fonksiyonu
+function previewImage(imageSrc) {
+    const modal = document.getElementById('imagePreviewModal');
+    const previewImg = document.getElementById('previewImage');
+    previewImg.src = imageSrc;
+    modal.style.display = 'block';
+}
+
+// Önizleme modalını kapat
+function closePreviewModal() {
+    document.getElementById('imagePreviewModal').style.display = 'none';
+}
+
+// Silme onayı
+function confirmDelete(filename) {
+    return confirm(`"${filename}" dosyasını silmek istediğinizden emin misiniz?\n\nBu işlem geri alınamaz!`);
+}
+
+// Modal dışına tıklandığında kapat
+window.onclick = function(event) {
+    const modal = document.getElementById('imagePreviewModal');
+    if (event.target === modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// ESC tuşu ile modal kapatma
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closePreviewModal();
+    }
+});
+</script>
+{% endblock %} 

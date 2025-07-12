@@ -1,0 +1,12 @@
+# Flask Uygulama Ayarları
+SECRET_KEY=your-secret-key-here
+FLASK_ENV=development
+
+# Veritabanı Ayarları
+DATABASE_URL=sqlite:///site.db
+
+# ===== SENDGRID AYARLARI =====
+# SendGrid kullanmak için bu ayarları doldurun
+SENDGRID_API_KEY=your-sendgrid-api-key-here
+SENDGRID_FROM_EMAIL=your-verified-email@yourdomain.com
+OWNER_EMAIL=otel.sahibi@yourdomain.com 

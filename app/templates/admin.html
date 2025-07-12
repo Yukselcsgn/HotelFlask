@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}Yönetim Paneli{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <div class="admin-header">
+        <h2>🏨 Altun Pansiyon Yönetim Paneli</h2>
+        <div class="admin-actions">
+            <span class="welcome-text">Hoş geldiniz, Admin!</span>
+            <a href="{{ url_for('admin.logout') }}" class="logout-btn">Çıkış Yap</a>
+        </div>
+    </div>
+    
+    <div class="admin-nav">
+        <a href="#reservations" class="nav-tab active" onclick="showTab('reservations')">Rezervasyonlar</a>
+        <a href="#prices" class="nav-tab" onclick="showTab('prices')">Fiyat Yönetimi</a>
+        <a href="#images" class="nav-tab" onclick="showTab('images')">Fotoğraf Yönetimi</a>
+    </div>
+    
+    <div id="reservations" class="tab-content active">
+        <div class="stats-container">
+            <div class="stat-card">
+                <h3>Toplam Rezervasyon</h3>
+                <p class="stat-number">{{ reservations|length }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Bu Ay</h3>
+                <p class="stat-number">{{ current_month_count }}</p>
+            </div>
+        </div>
+        
+        <div class="reservations-section">
+            <h3>Gelen Rezervasyonlar</h3>
+            
+            {% if reservations %}
+            <div class="table-container">
+                <table class="reservations-table">
+                    <thead>
+                        <tr>
+                            <th>Ad Soyad</th>
+                            <th>E-posta</th>
+                            <th>Oda Tipi</th>
+                            <th>Giriş</th>
+                            <th>Çıkış</th>
+                            <th>Kayıt Tarihi</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in reservations %}
+                        <tr>
+                            <td>{{ r.name }}</td>
+                            <td>{{ r.email }}</td>
+                            <td><span class="room-type {{ r.room_type.lower() }}">{{ r.room_type }}</span></td>
+                            <td>{{ r.check_in.strftime('%d.%m.%Y') }}</td>
+                            <td>{{ r.check_out.strftime('%d.%m.%Y') }}</td>
+                            <td>{{ r.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+                            <td>
+                                <button class="action-btn view-btn" onclick="viewReservation({{ r.id }})">Görüntüle</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="no-reservations">
+                <p>Henüz rezervasyon bulunmuyor.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div id="prices" class="tab-content">
+        <div class="prices-section">
+            <h3>Oda Fiyatları</h3>
+            <div class="price-cards">
+                {% for price in room_prices %}
+                <div class="price-card">
+                    <h4>{{ price.room_type }}</h4>
+                    <p class="price">{{ price.price_per_night }}₺</p>
+                    <p class="description">{{ price.description or 'Açıklama yok' }}</p>
+                    <button class="edit-btn" onclick="editPrice('{{ price.room_type }}', {{ price.price_per_night }}, '{{ price.description or '' }}')">Düzenle</button>
+                </div>
+                {% endfor %}
+            </div>
+            <a href="{{ url_for('admin.manage_prices') }}" class="manage-btn">Fiyatları Yönet</a>
+        </div>
+    </div>
+    
+    <div id="images" class="tab-content">
+        <div class="images-section">
+            <h3>📸 Fotoğraf Yönetimi</h3>
+            <div class="image-management">
+                <div class="image-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">{{ total_images_count }}</span>
+                        <span class="stat-label">Toplam Fotoğraf</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">{{ room_images_count }}</span>
+                        <span class="stat-label">Oda Fotoğrafı</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">{{ slider_images_count }}</span>
+                        <span class="stat-label">Slayt Fotoğrafı</span>
+                    </div>
+                </div>
+                <a href="{{ url_for('admin.manage_images') }}" class="manage-btn">📤 Fotoğrafları Yönet</a>
+                <p>Oda fotoğrafları ve anasayfa slayt fotoğraflarını buradan yönetebilirsiniz.<br>
+                Yeni fotoğraf yükleyebilir, mevcut fotoğrafları önizleyebilir ve silebilirsiniz.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Rezervasyon Detay Modal -->
+<div id="reservationModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Rezervasyon Detayları</h3>
+        <div id="reservationDetails"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}

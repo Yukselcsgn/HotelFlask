@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block title %}Rezervasyon Yap{% endblock %}
+
+{% block content %}
+<div class="reservation-header">
+    <h2>Rezervasyon Formu</h2>
+    <p class="reservation-desc">Altun Pansiyon'da yerinizi hemen ayırtın! Lütfen bilgilerinizi eksiksiz doldurun.</p>
+</div>
+<form method="POST" class="reservation-form">
+    <label for="name">Ad Soyad:</label>
+    <input type="text" id="name" name="name" placeholder="Adınızı ve soyadınızı giriniz" required>
+    <label for="email">E-posta:</label>
+    <input type="email" id="email" name="email" placeholder="ornek@mail.com" required>
+    <label>Oda Tipi:</label>
+    <div class="room-type-cards">
+        <label class="room-card" data-room-type="Standart" data-price="{% if room_prices.get('Standart') %}{% if room_prices['Standart'].is_discounted and room_prices['Standart'].discount_percentage > 0 %}{{ room_prices['Standart'].get_discounted_price()|round(2) }}{% else %}{{ room_prices['Standart'].price_per_night }}{% endif %}{% else %}0{% endif %}">
+            <input type="radio" name="room_type" value="Standart" required>
+            <img src="{{ url_for('static', filename='images/standart/9091541f-bdec-4f78-b9c4-232473eaece0.jpg') }}" alt="Standart Oda">
+            <span class="room-name">Standart</span>
+            {% if room_prices.get('Standart') %}
+            {% if room_prices['Standart'].is_discounted and room_prices['Standart'].discount_percentage > 0 %}
+            <div class="price-display">
+                <p class="original-price">{{ room_prices['Standart'].original_price }}₺</p>
+                <p class="discounted-price">{{ room_prices['Standart'].get_discounted_price()|round(2) }}₺/gece</p>
+                <p class="discount-badge">%{{ room_prices['Standart'].discount_percentage }} İndirim</p>
+            </div>
+            {% else %}
+            <span class="room-price">{{ room_prices['Standart'].price_per_night }}₺/gece</span>
+            {% endif %}
+            {% endif %}
+        </label>
+        <label class="room-card" data-room-type="Deluxe" data-price="{% if room_prices.get('Deluxe') %}{% if room_prices['Deluxe'].is_discounted and room_prices['Deluxe'].discount_percentage > 0 %}{{ room_prices['Deluxe'].get_discounted_price()|round(2) }}{% else %}{{ room_prices['Deluxe'].price_per_night }}{% endif %}{% else %}0{% endif %}">
+            <input type="radio" name="room_type" value="Deluxe" required>
+            <img src="{{ url_for('static', filename='images/deluxe/e12f74b8-fbe6-4e05-bde5-071da5dd079f.jpg') }}" alt="Deluxe Oda">
+            <span class="room-name">Standart double</span>
+            {% if room_prices.get('Deluxe') %}
+            {% if room_prices['Deluxe'].is_discounted and room_prices['Deluxe'].discount_percentage > 0 %}
+            <div class="price-display">
+                <p class="original-price">{{ room_prices['Deluxe'].original_price }}₺</p>
+                <p class="discounted-price">{{ room_prices['Deluxe'].get_discounted_price()|round(2) }}₺/gece</p>
+                <p class="discount-badge">%{{ room_prices['Deluxe'].discount_percentage }} İndirim</p>
+            </div>
+            {% else %}
+            <span class="room-price">{{ room_prices['Deluxe'].price_per_night }}₺/gece</span>
+            {% endif %}
+            {% endif %}
+        </label>
+        <label class="room-card" data-room-type="Suit" data-price="{% if room_prices.get('Suit') %}{% if room_prices['Suit'].is_discounted and room_prices['Suit'].discount_percentage > 0 %}{{ room_prices['Suit'].get_discounted_price()|round(2) }}{% else %}{{ room_prices['Suit'].price_per_night }}{% endif %}{% else %}0{% endif %}">
+            <input type="radio" name="room_type" value="Suit" required>
+            <img src="{{ url_for('static', filename='images/suit/ec65c984-113b-42dc-87d9-06dcc1114d52.jpg') }}" alt="Suit Oda">
+            <span class="room-name">Standart triple</span>
+            {% if room_prices.get('Suit') %}
+            {% if room_prices['Suit'].is_discounted and room_prices['Suit'].discount_percentage > 0 %}
+            <div class="price-display">
+                <p class="original-price">{{ room_prices['Suit'].original_price }}₺</p>
+                <p class="discounted-price">{{ room_prices['Suit'].get_discounted_price()|round(2) }}₺/gece</p>
+                <p class="discount-badge">%{{ room_prices['Suit'].discount_percentage }} İndirim</p>
+            </div>
+            {% else %}
+            <span class="room-price">{{ room_prices['Suit'].price_per_night }}₺/gece</span>
+            {% endif %}
+            {% endif %}
+        </label>
+    </div>
+    <label for="check_in">Giriş Tarihi:</label>
+    <input type="date" id="check_in" name="check_in" required>
+    <label for="check_out">Çıkış Tarihi:</label>
+    <input type="date" id="check_out" name="check_out" required>
+    
+    <!-- Total Price Display -->
+    <div class="total-price-section">
+        <div class="price-breakdown">
+            <div class="price-row">
+                <span>Seçilen Oda:</span>
+                <span id="selected-room">-</span>
+            </div>
+            <div class="price-row">
+                <span>Gecelik Fiyat:</span>
+                <span id="nightly-price">-</span>
+            </div>
+            <div class="price-row">
+                <span>Kalış Süresi:</span>
+                <span id="stay-duration">-</span>
+            </div>
+            <div class="price-row total">
+                <span>Toplam Tutar:</span>
+                <span id="total-price">-</span>
+            </div>
+        </div>
+    </div>
+    
+    <button type="submit">Rezervasyon Yap</button>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const roomCards = document.querySelectorAll('.room-type-cards .room-card');
+    const checkInInput = document.getElementById('check_in');
+    const checkOutInput = document.getElementById('check_out');
+    
+    // Room selection handler
+    roomCards.forEach(card => {
+        const radio = card.querySelector('input[type="radio"]');
+        radio.addEventListener('change', function() {
+            if (this.checked) {
+                updatePriceDisplay();
+            }
+        });
+    });
+    
+    // Date change handlers
+    checkInInput.addEventListener('change', updatePriceDisplay);
+    checkOutInput.addEventListener('change', updatePriceDisplay);
+    
+    function updatePriceDisplay() {
+        const selectedRoom = document.querySelector('.room-type-cards input[type="radio"]:checked');
+        const checkIn = checkInInput.value;
+        const checkOut = checkOutInput.value;
+        
+        if (!selectedRoom || !checkIn || !checkOut) {
+            resetPriceDisplay();
+            return;
+        }
+        
+        const roomCard = selectedRoom.closest('.room-card');
+        const roomType = roomCard.getAttribute('data-room-type');
+        const pricePerNight = parseFloat(roomCard.getAttribute('data-price'));
+        
+        if (pricePerNight <= 0) {
+            resetPriceDisplay();
+            return;
+        }
+        
+        // Calculate stay duration
+        const checkInDate = new Date(checkIn);
+        const checkOutDate = new Date(checkOut);
+        const timeDiff = checkOutDate.getTime() - checkInDate.getTime();
+        const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        
+        if (daysDiff <= 0) {
+            resetPriceDisplay();
+            return;
+        }
+        
+        const totalPrice = pricePerNight * daysDiff;
+        
+        // Update display
+        document.getElementById('selected-room').textContent = roomType;
+        document.getElementById('nightly-price').textContent = pricePerNight + '₺';
+        document.getElementById('stay-duration').textContent = daysDiff + ' gece';
+        document.getElementById('total-price').textContent = totalPrice + '₺';
+    }
+    
+    function resetPriceDisplay() {
+        document.getElementById('selected-room').textContent = '-';
+        document.getElementById('nightly-price').textContent = '-';
+        document.getElementById('stay-duration').textContent = '-';
+        document.getElementById('total-price').textContent = '-';
+    }
+});
+</script>
+{% endblock %}

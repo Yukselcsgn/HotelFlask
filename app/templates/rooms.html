@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Odalar{% endblock %}
+
+{% block content %}
+<h2>Oda Tipleri</h2>
+<div class="rooms-container">
+
+    <div class="room-card" data-room="standart">
+        <img src="{{ url_for('static', filename='images/standart/9091541f-bdec-4f78-b9c4-232473eaece0.jpg') }}" alt="Standart Oda">
+        <h3>Standart Oda</h3>
+        {% if room_prices.get('Standart') %}
+        {% if room_prices['Standart'].is_discounted and room_prices['Standart'].discount_percentage > 0 %}
+        <div class="price-display">
+            <p class="original-price">{{ room_prices['Standart'].original_price }}₺</p>
+            <p class="discounted-price">{{ room_prices['Standart'].get_discounted_price()|round(2) }}₺</p>
+            <p class="discount-badge">%{{ room_prices['Standart'].discount_percentage }} İndirim</p>
+        </div>
+        {% else %}
+        <div class="room-price">
+            <span class="price-amount">{{ room_prices['Standart'].price_per_night }}₺</span>
+            <span class="price-label">gecelik</span>
+        </div>
+        {% endif %}
+        {% endif %}
+        <p>Konforlu yatak, modern banyo, klima ve ücretsiz Wi-Fi içeren, sade ve rahat bir oda.</p>
+        <ul>
+            <li>50 mbps internet</li>
+            <li>TV ve minibar</li>
+            <li>Şehir manzarası</li>
+            <li>Çamaşırhane</li>
+            <li>24 saat açık resepsiyon</li>
+            <li>Ortak mikrodalga fırın</li>
+        </ul>
+    </div>
+
+    <div class="room-card" data-room="deluxe">
+        <img src="{{ url_for('static', filename='images/deluxe/e12f74b8-fbe6-4e05-bde5-071da5dd079f.jpg') }}" alt="Deluxe Oda">
+        <h3>Standart double</h3>
+        {% if room_prices.get('Deluxe') %}
+        {% if room_prices['Deluxe'].is_discounted and room_prices['Deluxe'].discount_percentage > 0 %}
+        <div class="price-display">
+            <p class="original-price">{{ room_prices['Deluxe'].original_price }}₺</p>
+            <p class="discounted-price">{{ room_prices['Deluxe'].get_discounted_price()|round(2) }}₺</p>
+            <p class="discount-badge">%{{ room_prices['Deluxe'].discount_percentage }} İndirim</p>
+        </div>
+        {% else %}
+        <div class="room-price">
+            <span class="price-amount">{{ room_prices['Deluxe'].price_per_night }}₺</span>
+            <span class="price-label">gecelik</span>
+        </div>
+        {% endif %}
+        {% endif %}
+        <p>Daha geniş alan, lüks dekorasyon ve ekstra oturma bölümü sunar. </p>
+        <ul>
+            <li>50 mbps internet</li>
+            <li>TV ve minibar</li>
+            <li>Şehir manzarası</li>
+            <li>Çamaşırhane</li>
+            <li>24 saat açık resepsiyon</li>
+            <li>Ortak mikrodalga fırın</li>
+        </ul>
+    </div>
+
+    <div class="room-card" data-room="suit">
+        <img src="{{ url_for('static', filename='images/suit/ec65c984-113b-42dc-87d9-06dcc1114d52.jpg') }}" alt="Suit Oda">
+        <h3>Standart Triple</h3>
+        {% if room_prices.get('Suit') %}
+        {% if room_prices['Suit'].is_discounted and room_prices['Suit'].discount_percentage > 0 %}
+        <div class="price-display">
+            <p class="original-price">{{ room_prices['Suit'].original_price }}₺</p>
+            <p class="discounted-price">{{ room_prices['Suit'].get_discounted_price()|round(2) }}₺</p>
+            <p class="discount-badge">%{{ room_prices['Suit'].discount_percentage }} İndirim</p>
+        </div>
+        {% else %}
+        <div class="room-price">
+            <span class="price-amount">{{ room_prices['Suit'].price_per_night }}₺</span>
+            <span class="price-label">gecelik</span>
+        </div>
+        {% endif %}
+        {% endif %}
+        <p>Eşsiz ve özel bir tatil deneyimini 3 kişilik büyük odalarda sunar.</p>
+        <ul>
+            <li>50 mbps internet</li>
+            <li>TV ve minibar</li>
+            <li>Şehir manzarası</li>
+            <li>Çamaşırhane</li>
+            <li>24 saat açık resepsiyon</li>
+            <li>Ortak mikrodalga fırın</li>
+            <li>Panoramik manzara</li>
+        </ul>
+    </div>
+
+</div>
+
+<!-- Modal -->
+<div id="roomModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="lightbox" class="lightbox" style="display:none;">
+            <span class="lightbox-close">&times;</span>
+            <img id="lightbox-img" src="" alt="Büyük Fotoğraf">
+            <span class="lightbox-prev">&#10094;</span>
+            <span class="lightbox-next">&#10095;</span>
+        </div>
+        <div id="modalImages" class="modal-images"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/rooms-modal.js') }}"></script>
+{% endblock %}

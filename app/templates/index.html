@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Anasayfa{% endblock %}
+
+{% block content %}
+
+<div class="carousel-container">
+    <div class="carousel" id="homeCarousel">
+        <div class="carousel-slide active"><img src="{{ url_for('static', filename='images/WhatsApp Image 2025-07-01 at 23.10.28.jpeg') }}" alt="Altun Pansiyon"></div>
+        <div class="carousel-slide"><img src="{{ url_for('static', filename='images/594e9ecf-771c-46ba-a1e9-c3b0c4306d01.jpg') }}" alt="Otel Fotoğrafı"></div>
+        <div class="carousel-slide"><img src="{{ url_for('static', filename='images/2a01acd5-4c3a-4f3c-937e-28eea8587114.jpg') }}" alt="Otel Fotoğrafı"></div>
+        <div class="carousel-slide"><img src="{{ url_for('static', filename='images/ab0d7649-b2c0-457d-94df-f1ba32bc23aa.jpg') }}" alt="Otel Fotoğrafı"></div>
+    </div>
+    <button class="carousel-btn prev" id="carouselPrev">&#10094;</button>
+    <button class="carousel-btn next" id="carouselNext">&#10095;</button>
+</div>
+
+<div class="home-info">
+    <h2>Altun Pansiyon'a Hoş Geldiniz!</h2>
+    <p>
+        Altun Pansiyon, şehir merkezine yakın konumu, konforlu odaları ve güler yüzlü hizmetiyle unutulmaz bir konaklama deneyimi sunar. Modern ve temiz odalarımız, zengin kahvaltımız ve huzurlu ortamımız ile kendinizi evinizde hissedeceksiniz. Hem iş hem tatil amaçlı konaklamalarınız için ideal bir tercih!
+    </p>
+</div>
+<a href="/reserve">Şimdi Rezervasyon Yap</a>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/home-carousel.js') }}"></script>
+{% endblock %}

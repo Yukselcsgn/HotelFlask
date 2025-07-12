@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Otelimiz{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="/" class="logo-link">
+                <img src="{{ url_for('static', filename='images/WhatsApp Image 2025-07-01 at 23.10.28.jpeg') }}" alt="Otel Logo" class="logo-img">
+                <span class="logo-title">Altun Pansiyon</span>
+            </a>
+            <button class="menu-toggle" aria-label="Menüyü Aç/Kapat">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            <nav>
+                <ul>
+                    <li><a href="/">Anasayfa</a></li>
+                    <li><a href="/rooms">Odalar</a></li>
+                    <li><a href="/reserve">Rezervasyon</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flashes">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- BURAYA EKLE -->
+    {% include "includes/footer.html" %}
+</body>
+</html>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const today = new Date().toISOString().split('T')[0];
+    const checkInInput = document.getElementById("check_in");
+    const checkOutInput = document.getElementById("check_out");
+    
+    if (checkInInput) {
+        checkInInput.setAttribute('min', today);
+    }
+    if (checkOutInput) {
+        checkOutInput.setAttribute('min', today);
+    }
+    // Hamburger menu
+    const menuToggle = document.querySelector('.menu-toggle');
+    const nav = document.querySelector('nav ul');
+    if(menuToggle && nav) {
+        menuToggle.addEventListener('click', function() {
+            nav.classList.toggle('open');
+            menuToggle.classList.toggle('open');
+        });
+    }
+});
+</script>
+
+{% block scripts %}{% endblock %}

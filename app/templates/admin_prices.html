@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block title %}Fiyat Yönetimi - Admin{% endblock %}
+
+{% block content %}
+<div class="admin-dashboard">
+    <div class="admin-header">
+        <h2>💰 Fiyat Yönetimi</h2>
+        <div class="admin-actions">
+            <a href="{{ url_for('admin.dashboard') }}" class="back-btn">← Geri Dön</a>
+        </div>
+    </div>
+    
+    <div class="prices-management">
+        <h3>Oda Fiyatlarını Düzenle</h3>
+        
+        <div class="price-forms">
+            <form method="POST" action="{{ url_for('admin.update_price') }}" class="price-form">
+                <div class="form-group">
+                    <label for="room_type">Oda Tipi:</label>
+                    <select name="room_type" required>
+                        <option value="Standart">Standart</option>
+                        <option value="Deluxe">Deluxe</option>
+                        <option value="Suit">Suit</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="price">Gecelik Fiyat (₺):</label>
+                    <input type="number" name="price" step="0.01" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Açıklama:</label>
+                    <textarea name="description" rows="3" placeholder="Oda özellikleri ve açıklamaları..."></textarea>
+                </div>
+                
+                <div class="discount-section">
+                    <h4>🎯 İndirim Ayarları</h4>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="is_discounted" id="is_discounted">
+                            <span class="checkmark"></span>
+                            İndirim Aktif
+                        </label>
+                    </div>
+                    
+                    <div class="form-group" id="discount_percentage_group" style="display: none;">
+                        <label for="discount_percentage">İndirim Yüzdesi (%):</label>
+                        <input type="number" name="discount_percentage" step="0.1" min="0" max="100" value="0">
+                    </div>
+                </div>
+                
+                <button type="submit" class="save-btn">💾 Fiyatı Kaydet</button>
+            </form>
+        </div>
+        
+        <div class="current-prices">
+            <h3>Mevcut Fiyatlar</h3>
+            <div class="price-cards">
+                {% for price in room_prices %}
+                <div class="price-card">
+                    <h4>{{ price.room_type }}</h4>
+                    {% if price.is_discounted and price.discount_percentage > 0 %}
+                    <div class="price-display">
+                        <p class="original-price">{{ price.original_price }}₺</p>
+                        <p class="discounted-price">{{ price.get_discounted_price()|round(2) }}₺</p>
+                        <p class="discount-badge">%{{ price.discount_percentage }} İndirim</p>
+                    </div>
+                    {% else %}
+                    <p class="price">{{ price.price_per_night }}₺</p>
+                    {% endif %}
+                    <p class="description">{{ price.description or 'Açıklama yok' }}</p>
+                    <p class="updated">Son güncelleme: {{ price.updated_at.strftime('%d.%m.%Y %H:%M') }}</p>
+                </div>
+                {% else %}
+                <p class="no-prices">Henüz fiyat tanımlanmamış.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// İndirim checkbox kontrolü
+document.getElementById('is_discounted').addEventListener('change', function() {
+    const discountGroup = document.getElementById('discount_percentage_group');
+    if (this.checked) {
+        discountGroup.style.display = 'block';
+    } else {
+        discountGroup.style.display = 'none';
+        document.querySelector('input[name="discount_percentage"]').value = '0';
+    }
+});
+
+// Fiyat formunu doldur
+document.querySelector('select[name="room_type"]').addEventListener('change', function() {
+    const roomType = this.value;
+    const priceCards = document.querySelectorAll('.price-card');
+    
+    priceCards.forEach(card => {
+        if (card.querySelector('h4').textContent === roomType) {
+            const priceDisplay = card.querySelector('.price-display');
+            const priceElement = card.querySelector('.price');
+            const description = card.querySelector('.description').textContent;
+            
+            let price, isDiscounted = false, discountPercentage = 0;
+            
+            if (priceDisplay) {
+                // İndirimli fiyat varsa
+                price = priceDisplay.querySelector('.discounted-price').textContent.replace('₺', '');
+                isDiscounted = true;
+                discountPercentage = priceDisplay.querySelector('.discount-badge').textContent.match(/%(\d+(\.\d+)?)/)[1];
+            } else if (priceElement) {
+                // Normal fiyat
+                price = priceElement.textContent.replace('₺', '');
+            }
+            
+            document.querySelector('input[name="price"]').value = price;
+            document.querySelector('textarea[name="description"]').value = description;
+            document.getElementById('is_discounted').checked = isDiscounted;
+            document.querySelector('input[name="discount_percentage"]').value = discountPercentage;
+            
+            // İndirim alanını göster/gizle
+            const discountGroup = document.getElementById('discount_percentage_group');
+            discountGroup.style.display = isDiscounted ? 'block' : 'none';
+        }
+    });
+});
+</script>
+{% endblock %} 
